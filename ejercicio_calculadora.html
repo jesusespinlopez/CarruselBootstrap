@@ -36,65 +36,69 @@
 </style>
 <script src="js/jquery-1.11.2.min.js"></script>
 <script src="js/jquery-ui.min.js"></script>
-<script src="js/jquery.ui.touch-punch.min.js"></script>
 <script src="js/bootstrap.js"></script>
-
 <script type="text/javascript">
     $(function(){
   var num, acc = 0, op = "";
 
-  $("#calcular").on("click", function () {
-    if (op === "+") {$("#num").val( (+acc + +$("#num").val()))}
-    if (op === "-") {$("#num").val( (+acc - +$("#num").val()))}
-    if (op === "*") {$("#num").val( (+acc * +$("#num").val()))}
-    if (op === "/") {$("#num").val( (+acc / +$("#num").val()))}
-    if (op === "^") {$("#num").val( (Math.pow(+acc,+$("#num").val())))}
-  });
+  $("#toM").on("click", function  () {$("#mem").html($("#num").html())}); 
+  $("#fromM").on("click", function  () {$("#num").html($("#mem").html())}); 
 
-  $("#num").on("click", function  () {$("#num").val("");});  
+  $("#num").on("click", function  () {$("#num").html("");});
+  $("#num").draggable( {revert: "invalid",  helper:"clone"} );
+        
+$("#mem").droppable({drop: function (event, ui){$(this).html(ui.draggable.html());}});
+
+  $("#calcular").on("click", function () {
+    if (op === "+") {$("#num").html( (+acc + +$("#num").html()))}
+    if (op === "-") {$("#num").html( (+acc - +$("#num").html()))}
+    if (op === "*") {$("#num").html( (+acc * +$("#num").html()))}
+    if (op === "/") {$("#num").html( (+acc / +$("#num").html()))}
+    if (op === "^") {$("#num").html( (Math.pow(+acc,+$("#num").html())))}
+  }); 
 
 //1) Operaciones unitarias (con un solo operando):
 //1.1) x^2 (número elevado al cuadrado)
-    $("#cuadrado").on("click", function  () {$("#num").val( Math.pow($("#num").val(),2)); });
+    $("#cuadrado").on("click", function  () {$("#num").html( Math.pow($("#num").html(),2)); });
 //1.5) 2^n (potencia n del número 2)
-        $("#potencia2").on("click", function () {$("#num").val(Math.pow(2,$("#num").val())); });
+        $("#potencia2").on("click", function () {$("#num").html(Math.pow(2,$("#num").html())); });
 //1.2) 1/x (inverso del número)
-    $("#inverso").on("click", function  () {$("#num").val( 1/$("#num").val());});
+    $("#inverso").on("click", function  () {$("#num").html( 1/$("#num").html());});
 //1.3) sqrt(x) (raiz cuadrada del número)
-    $("#raiz").on("click", function  () {$("#num").val( Math.sqrt($("#num").val()));});
+    $("#raiz").on("click", function  () {$("#num").html( Math.sqrt($("#num").html()));});
 //1.4) parte_entera(x) (parte entera de x: si x es positivo devuelve Math.floor(x) y si es negativo devuelve -Math.ceil(x))
-    $("#entera").on("click", function  () {$("#num").val( (parseInt($("#num").val()) < 0)? -Math.ceil($("#num").val()) : Math.floor($("#num").val()));});
+    $("#entera").on("click", function  () {$("#num").html( (parseInt($("#num").html()) < 0)? -Math.ceil($("#num").html()) : Math.floor($("#num").html()));});
 //1.6) n! (factorial del número n: n*(n-1)*(n-2)*...*3*2*1)
     $("#factorial").on("click", function  () {
-        var valor = +$("#num").val();
+        var valor = +$("#num").html();
         for(var sumado = 1; valor > 0; valor-- ) 
             sumado *= valor;
-        $("#num").val(sumado)});
+        $("#num").html(sumado)});
 //2) Operaciones binarias (con dos operandos):
 //2.1) +. -. *, / (suma, resta, multiplicación y división)
-  $("#mas").on("click", function ()   { acc = $("#num").val();  op = "+"; });
-  $("#menos").on("click", function () { acc = $("#num").val();  op = "-"; });
-  $("#por").on("click", function ()   { acc = $("#num").val();  op = "*"; });
-  $("#parte").on("click", function () { acc = $("#num").val();  op = "/"; });
+  $("#mas").on("click", function ()   { acc = $("#num").html();  op = "+"; });
+  $("#menos").on("click", function () { acc = $("#num").html();  op = "-"; });
+  $("#por").on("click", function ()   { acc = $("#num").html();  op = "*"; });
+  $("#parte").on("click", function () { acc = $("#num").html();  op = "/"; });
 //2.2) x^y (x elevado a y)
-    $("#potencia").on("click", function  () { acc = $("#num").val(); op = "^"});
+    $("#potencia").on("click", function  () { acc = $("#num").html(); op = "^"});
 //3) Operaciones con n operandos introducidos en formato CSV:
 //3.1)  sumatorio(x) (sumatorio de n números)
     $("#sumatorio").on("click", function  () {
-        var csv = $("#num").val();
+        var csv = $("#num").html();
         var elementos = csv.split(",");
         var sumado = 0;
         for(var posicion = elementos.length - 1; posicion >= 0; posicion-- ) 
             sumado += +elementos[posicion];
-        $("#num").val(sumado)});
+        $("#num").html(sumado)});
 //3.2) producto(x) (producto de n números)
     $("#producto").on("click", function  () {
-        var csv = $("#num").val();
+        var csv = $("#num").html();
         var elementos = csv.split(",");
         var multiplicado = 1;
         for(var posicion = elementos.length - 1; posicion >= 0; posicion-- ) 
             multiplicado *= +elementos[posicion];
-        $("#num").val(multiplicado)});
+        $("#num").html(multiplicado)});
      });
 </script> 
 </head>
@@ -122,6 +126,7 @@
     </div>
   </div>
   </nav>
+
 <div class="ejercicio">
     <p>“Buenos días, bienvenido a la calculadora de Jesús Espín López</p>
   <div style="float: left;"><p>Número:<p>
@@ -130,7 +135,7 @@
   </div>
     <div style="float: left; margin: 0px 10px;"><p>Memoria:<p>
     <button id="fromM">&larr;</button>
-<div id="mem" style="float: left;border: 5px solid #1C6EA4; margin: 0px 0px; text-align: right; width: 10em; height: 2em"></div>
+<div id="mem" style="float: left; border: 5px solid #1C6EA4; margin: 0px 0px; text-align: right; width: 10em; height: 2em"></div>
   </div>
     <div class="clear" style="clear: both"> </div>
     <p></p>
